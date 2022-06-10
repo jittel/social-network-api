@@ -35,4 +35,18 @@ module.exports = {
       .then(() => res.json({ message: 'Thought and associated reactions deleted!' }))
       .catch((err) => res.status(500).json(err));
   },
+  // add a reaction
+  addReaction(req, res) {
+    Thought.findOneAndUpdate({ _id: req.params.thoughtId }, { $addToSet: { reactions: req.body } }, { new: true })
+    .then((dbThoughtData) => {
+      if (!dbThoughtData) {
+        return res.status(404).json({message: "no thought with this id"})
+      }
+      res.json(dbThoughtData)
+    })
+    .catch((err) => {
+      console.log(err)
+      res.status(500).json(err)
+    })
+  }
 };
