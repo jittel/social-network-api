@@ -35,4 +35,18 @@ module.exports = {
       .then(() => res.json({ message: 'User and associated thoughts deleted!' }))
       .catch((err) => res.status(500).json(err));
   },
+  // add a friend
+  addFriend(req, res) {
+    User.findOneAndUpdate({ _id: req.params.userId }, { $addToSet: { friends: req.body } }, { new: true })
+    .then((dbFriendData) => {
+      if (!dbFriendData) {
+        return res.status(404).json({message: "no friend with this id"})
+      }
+      res.json(dbFriendData)
+    })
+    .catch((err) => {
+      console.log(err)
+      res.status(500).json(err)
+    })
+  }
 };
